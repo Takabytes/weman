@@ -57,7 +57,9 @@
 
     </im.vector.app.core.preference.VectorPreferenceCategory>
 
-    <im.vector.app.core.preference.VectorPreferenceCategory android:title="@string/settings_integrations">
+    <im.vector.app.core.preference.VectorPreferenceCategory 
+        android:title="@string/settings_integrations"
+        android:visibility="gone">
 
         <im.vector.app.core.preference.VectorPreference
             android:focusable="false"
@@ -77,7 +79,9 @@
 
     </im.vector.app.core.preference.VectorPreferenceCategory>
 
-    <im.vector.app.core.preference.VectorPreferenceCategory android:title="@string/settings_advanced">
+    <im.vector.app.core.preference.VectorPreferenceCategory 
+        android:title="@string/settings_advanced"
+        android:visibility="gone">
 
         <im.vector.app.core.preference.VectorPreference
             android:key="SETTINGS_LOGGED_IN_PREFERENCE_KEY"

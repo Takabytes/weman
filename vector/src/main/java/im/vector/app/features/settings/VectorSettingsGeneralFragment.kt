@@ -176,12 +176,8 @@ class VectorSettingsGeneralFragment :
 
         // Display name
         mDisplayNamePreference.let {
-            it.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-                newValue
-                        ?.let { value -> (value as? String)?.trim() }
-                        ?.let { value -> onDisplayNameChanged(value) }
-                false
-            }
+            it.onPreferenceChangeListener = null // Disable display name change
+            it.isEnabled = false // Make it non-clickable
         }
 
         val homeServerCapabilities = session.homeServerCapabilitiesService().getHomeServerCapabilities()
@@ -212,6 +208,7 @@ class VectorSettingsGeneralFragment :
         discoveryPreference.onPreferenceClickListener = openDiscoveryScreenPreferenceClickListener
 
         mIdentityServerPreference.onPreferenceClickListener = openDiscoveryScreenPreferenceClickListener
+        mIdentityServerPreference.isVisible = false
 
         // External account management URL for delegated OIDC auth
         // Hide the preference if no URL is given by server
@@ -265,24 +262,12 @@ class VectorSettingsGeneralFragment :
         }
 
         (findPreference(VectorPreferences.SETTINGS_ALLOW_INTEGRATIONS_KEY) as? VectorSwitchPreference)?.let {
-            it.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-                // Disable it while updating the state, will be re-enabled by the account data listener.
-                it.isEnabled = false
-                lifecycleScope.launch {
-                    try {
-                        session.integrationManagerService().setIntegrationEnabled(newValue as Boolean)
-                    } catch (failure: Throwable) {
-                        Timber.e(failure, "Failed to update integration manager state")
-                        activity?.let { activity ->
-                            Toast.makeText(activity, errorFormatter.toHumanReadable(failure), Toast.LENGTH_SHORT).show()
-                        }
-                        // Restore the previous state
-                        it.isChecked = !it.isChecked
-                        it.isEnabled = true
-                    }
-                }
-                true
-            }
+            it.isVisible = false // Hide the integration preference
+            it.onPreferenceChangeListener = null // Disable the listener
+        }
+
+        findPreference<VectorPreference>(VectorPreferences.SETTINGS_INTEGRATION_MANAGER_UI_URL_KEY)!!.let {
+            it.isVisible = false // Hide the integration manager UI URL preference
         }
 
         // clear medias cache
@@ -319,7 +304,7 @@ class VectorSettingsGeneralFragment :
             false
         }
         // Account deactivation is visible only if account is not managed by an external URL.
-        mDeactivateAccountCategory.isVisible = homeServerCapabilities.delegatedOidcAuthEnabled.not()
+        mDeactivateAccountCategory.isVisible = false
     }
 
     private suspend fun getCacheSize(): Long = withContext(Dispatchers.IO) {
@@ -341,7 +326,7 @@ class VectorSettingsGeneralFragment :
     }
 
     private fun refreshIntegrationManagerSettings() {
-        val integrationAllowed = session.integrationManagerService().isIntegrationEnabled()
+        val integrationAllowed = false // Force to false to disable integrations
         (findPreference<SwitchPreference>(VectorPreferences.SETTINGS_ALLOW_INTEGRATIONS_KEY))!!.let {
             val savedListener = it.onPreferenceChangeListener
             it.onPreferenceChangeListener = null

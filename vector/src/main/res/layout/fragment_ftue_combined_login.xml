@@ -108,6 +108,7 @@
             android:paddingEnd="12dp"
             android:text="@string/ftue_auth_create_account_edit_server_selection"
             android:textAllCaps="true"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/selectedServerDescription"
             app:layout_constraintEnd_toEndOf="@id/loginGutterEnd"
             app:layout_constraintTop_toTopOf="@id/chooseYourServerHeader" />
@@ -195,6 +196,7 @@
             android:text="@string/ftue_auth_forgot_password"
             android:textAllCaps="true"
             android:textColor="?colorSecondary"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/actionSpacing"
             app:layout_constraintEnd_toEndOf="@id/loginGutterEnd"
             app:layout_constraintHorizontal_bias="1"
