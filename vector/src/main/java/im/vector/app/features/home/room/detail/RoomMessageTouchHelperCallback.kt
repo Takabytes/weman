@@ -73,7 +73,7 @@ class RoomMessageTouchHelperCallback(
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: EpoxyViewHolder): Int {
         if (handler.canSwipeModel(viewHolder.model)) {
-            return ItemTouchHelper.Callback.makeMovementFlags(0, ItemTouchHelper.START) // Should we use Left?
+            return ItemTouchHelper.Callback.makeMovementFlags(0, ItemTouchHelper.END) // Changed to END for left-to-right swipe
         } else {
             return 0
         }
@@ -191,7 +191,7 @@ class RoomMessageTouchHelperCallback(
             }
         }
 
-        val x: Int = itemView.width - if (translationX > triggerDistance + triggerDelta) {
+        val x: Int = if (translationX > triggerDistance + triggerDelta) {
             (convertToPx(130) / 2).toInt()
         } else {
             (translationX / 2).toInt()
